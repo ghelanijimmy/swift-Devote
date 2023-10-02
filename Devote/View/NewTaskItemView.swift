@@ -13,6 +13,7 @@ struct NewTaskItemView: View {
     @State private var task: String = ""
     @FocusState private var focus: Bool
     @Binding var isShowing: Bool
+    @AppStorage("isDarkMode") private var isDarkMode: Bool = false
     
     private var isButtonDisabled: Bool {
         task.isEmpty
@@ -52,7 +53,7 @@ struct NewTaskItemView: View {
                         .font(.system(size: 24, weight: .bold, design: .rounded))
                         .padding()
                         .background(
-                            Color(UIColor.systemGray6)
+                            isDarkMode ? Color(UIColor.tertiarySystemBackground) : Color(UIColor.secondarySystemBackground)
                         )
                         .clipShape(RoundedRectangle(cornerRadius: 10))
                         .focused($focus)
@@ -73,7 +74,7 @@ struct NewTaskItemView: View {
                 }) //: VStack
                 .padding(.horizontal)
                 .padding(.vertical, 20)
-                .background(Color.white)
+                .background(isDarkMode ? Color(UIColor.secondarySystemBackground) : .white)
                 .clipShape(RoundedRectangle(cornerRadius: 16))
                 .shadow(color: Color(red: 0, green: 0, blue: 0, opacity: 0.65), radius: 24)
                 .frame(maxWidth: 640)

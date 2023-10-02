@@ -13,7 +13,7 @@ struct ContentView: View {
     // MARK: - PROPERTY
     @State var task: String = ""
     @State private var showNewTaskItem: Bool = false
-    
+    @AppStorage("isDarkMode") private var isDarkMode: Bool = false
     
     
     // FETCHING DATA
@@ -47,6 +47,34 @@ struct ContentView: View {
                 // MARK: - MAIN VIEW
                 VStack {
                     // MARK: - HEADER
+                    HStack(spacing: 10) {
+                        // TITLE
+                        Text("Devote")
+                            .font(.system(.largeTitle, design: .rounded))
+                            .fontWeight(.heavy)
+                            .padding(.leading, 4)
+                        
+                        Spacer()
+                        // EDIT BUTTON
+                        EditButton()
+                            .font(.system(size: 16, weight: .semibold, design: .rounded))
+                            .padding(.horizontal, 10)
+                            .frame(minWidth: 70, minHeight: 24)
+                            .background(Capsule().stroke(.white, lineWidth: 2))
+                        // APPEARANCE BUTTON
+                        Button(action: {
+                            // TOGGLE APPEARANCE
+                            isDarkMode.toggle()
+                        }, label: {
+                            Image(systemName: isDarkMode ? "moon.circle.fill" : "moon.circle")
+                                .resizable()
+                                .frame(width: 24, height: 24)
+                                .font(.system(.title, design: .rounded))
+                        })
+                    } //: HSTACK
+                    .padding()
+                    .foregroundStyle(.white)
+                    
                     Spacer(minLength: 80)
                                        
                     // MARK: - NEW TASK BUTTON
@@ -109,12 +137,7 @@ struct ContentView: View {
                 }
             } //: ZStack
             .navigationTitle("Daily Tasks")
-            .navigationBarTitleDisplayMode(.large)
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    EditButton()
-                }
-            } //: TOOLBAR
+            .toolbar(.hidden)
             .background(
                 BackgroundImageView()
             )
@@ -126,5 +149,8 @@ struct ContentView: View {
 }
 
 #Preview {
-    ContentView().environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
+    @AppStorage("isDarkMode") var isDarkMode: Bool = true
+
+    return ContentView().environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
+        .preferredColorScheme(isDarkMode ? .dark : .light)
 }
